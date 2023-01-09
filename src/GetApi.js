@@ -8,11 +8,13 @@ import {
 } from '@react-navigation/native';
 import {getUser, getUsers} from './service/Api';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import DeleteIcon from 'react-native-vector-icons/AntDesign'
 
 const GetApi = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [data, setData] = useState([]);
+
   const getAllUsers = async () => {
     let response = await getUsers();
     setData(response.data);
@@ -22,6 +24,11 @@ const GetApi = () => {
   //   let response = await getUser();
   //   console.log(response.data)
   // };
+
+  const onDelete = async (id)=>{
+    await deleteUser(id); 
+    getAllUsers();
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -65,6 +72,9 @@ const GetApi = () => {
                 })
               }>
               <Icon name="edit" size={25} style={styles.iconColor} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onDelete}>
+            <DeleteIcon name="delete" size={25} style={styles.iconColor} />
             </TouchableOpacity>
             <View style={styles.divider}></View>
           </View>
