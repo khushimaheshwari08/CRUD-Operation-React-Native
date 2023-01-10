@@ -30,6 +30,7 @@ const PostApi = () => {
           style={styles.inputStyle}
           placeholder="Enter title"
           placeholderTextColor="gray"
+          autoFocus
           value={title}
           onChangeText={title => setTitle(title)}
         />
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingLeft: 18,
     borderWidth: 1,
-    borderRadius: 30,
+    // borderRadius: 30,
     borderColor: '#f2c035',
     backgroundColor: '#f2f2f2',
     marginTop: 20,

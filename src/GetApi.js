@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import axios from 'axios';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {getUser, getUsers} from './service/Api';
+import {deleteUser, getUser, getUsers} from './service/Api';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import DeleteIcon from 'react-native-vector-icons/AntDesign'
+import DeleteIcon from 'react-native-vector-icons/AntDesign';
+import EyeIcon from 'react-native-vector-icons/Ionicons';
 
 const GetApi = () => {
   const navigation = useNavigation();
@@ -20,21 +20,17 @@ const GetApi = () => {
     setData(response.data);
   };
 
-  // const getById = async () => {
-  //   let response = await getUser();
-  //   console.log(response.data)
-  // };
-
-  const onDelete = async (id)=>{
-    await deleteUser(id); 
+  const onDelete = async id => {
+    let response = await deleteUser(id);
+    console.log(response);
     getAllUsers();
-  }
+  };
 
-  useFocusEffect(
-    useCallback(() => {
-      getUsers();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     getUsers();
+  //   }, []),
+  // );
 
   return (
     <View style={styles.container}>
@@ -43,6 +39,12 @@ const GetApi = () => {
           <Text style={styles.getButton_text}>GET USERS</Text>
         </TouchableOpacity>
       </View>
+
+      {/* <View style={[styles.getButton_parent, {marginTop: 10}]}>
+        <TouchableOpacity style={styles.getButton} onPress={()=> navigation.navigate('detailPageScreen')}>
+          <Text style={styles.getButton_text}>DETAIL PAGE</Text>
+        </TouchableOpacity>
+      </View> */}
 
       <View style={[styles.getButton_parent, {marginTop: 10}]}>
         <TouchableOpacity
@@ -63,19 +65,33 @@ const GetApi = () => {
             <Text style={styles.getButton_text} numberOfLines={1}>
               Body: {item.body}
             </Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('patchApiScreen', {
-                  id: item.id,
-                  title: item.title,
-                  body: item.body,
-                })
-              }>
-              <Icon name="edit" size={25} style={styles.iconColor} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onDelete}>
-            <DeleteIcon name="delete" size={25} style={styles.iconColor} />
-            </TouchableOpacity>
+            <View style={styles.iconParent}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('patchApiScreen', {
+                    id: item.id,
+                    // title: item.title,
+                    // body: item.body,
+                  })
+                }>
+                <Icon name="edit" size={25} style={styles.iconColor} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => onDelete(item.id)}>
+                <DeleteIcon name="delete" size={25} style={styles.iconColor} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('detailPageScreen', {
+                    id: item.id,
+                  })
+                }>
+                <EyeIcon
+                  name="eye-outline"
+                  size={25}
+                  style={styles.iconColor}
+                />
+              </TouchableOpacity>
+            </View>
             <View style={styles.divider}></View>
           </View>
         )}
@@ -110,6 +126,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 15,
+    padding: 4,
   },
   divider: {
     height: 4,
@@ -118,5 +135,9 @@ const styles = StyleSheet.create({
   },
   iconColor: {
     color: 'black',
+  },
+  iconParent: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
 });

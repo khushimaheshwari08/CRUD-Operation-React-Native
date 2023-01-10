@@ -1,18 +1,13 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
-  FlatList,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {patchUser} from './service/Api';
+import {getUser, patchUser} from './service/Api';
 
 const PatchApi = () => {
   const route = useRoute();
@@ -34,9 +29,15 @@ const PatchApi = () => {
     navigation.navigate('getAPIScreen');
   };
 
+  const getById = async id => {
+    let response = await getUser(id);
+    // console.log(response.data);
+    setTitle(response.data.title);
+    setBody(response.data.body);
+  };
+
   useEffect(() => {
-    setTitle(route.params.title);
-    setBody(route.params.body);
+    getById(route.params.id);
   }, []);
 
   return (
@@ -51,6 +52,7 @@ const PatchApi = () => {
         <TextInput
           style={styles.inputStyle}
           numberOfLines={1}
+          autoFocus
           placeholder="Title"
           placeholderTextColor="gray"
           value={title}
